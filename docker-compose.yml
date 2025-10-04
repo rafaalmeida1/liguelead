@@ -40,8 +40,11 @@ services:
       - REDIS_PORT=${REDIS_PORT}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
     depends_on:
-      - mysql
-      - redis
+      mysql:
+        condition: service_healthy
+        restart: true
+      redis:
+        condition: service_healthy
     volumes:
       - ./src:/app/src
       - /app/node_modules
@@ -55,6 +58,11 @@ services:
       - MYSQL_DATABASE=${DB_NAME}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     ports:
       - "${DB_PORT:-3306}:3306"
     volumes:
@@ -64,7 +72,26 @@ services:
 
   redis:
     image: redis:7-alpine
-    command: redis-server --requirepass ${REDIS_PASSWORD}
+    command: >
+      sh -c "
+      if [ -n '${REDIS_PASSWORD}' ]; then
+        redis-server --requirepass ${REDIS_PASSWORD}
+      else
+        redis-server
+      fi
+      "
+    healthcheck:
+      test: >
+        sh -c "
+        if [ -n '${REDIS_PASSWORD}' ]; then
+          redis-cli -a ${REDIS_PASSWORD} ping
+        else
+          redis-cli ping
+        fi
+        "
+      interval: 5s
+      timeout: 5s
+      retries: 5
     ports:
       - "${REDIS_PORT:-6379}:6379"
     volumes:

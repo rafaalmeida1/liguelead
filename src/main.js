@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { i18nMiddleware } from "./middlewares/i18n.js";
 import { generalLimiter } from "./middlewares/rateLimiter.js";
 import routes from "./routes/index.js";
+import { syncDatabase } from "./models/index.js";
 dotenv.config();
 
 const app = express();
@@ -15,6 +16,18 @@ app.use(routes);
 
 const PORT = process.env.NODE_PORT;
 
-app.listen(PORT, () => {
-  console.log(`Listening ${process.env.NODE_ENV} on ${process.env.NODE_ENV === 'development' ? `http://localhost:${PORT}` : `http://${process.env.NODE_HOST}:${PORT}`}`);
-});
+const startServer = async () => {
+    try {
+        await syncDatabase();
+        
+        app.listen(PORT, () => {
+            console.log(`Servidor rodando em ${process.env.NODE_ENV} na porta ${PORT}`);
+            console.log(`Ambiente: ${process.env.NODE_ENV}`);
+        });
+    } catch (error) {
+        console.error('Erro ao inicializar servidor:', error);
+        process.exit(1);
+    }
+};
+
+startServer();
