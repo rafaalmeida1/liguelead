@@ -1,0 +1,33 @@
+{
+  "name": "liguelead",
+  "version": "1.0.0",
+  "description": "Projeto LigueLead com Node.js, MySQL e Redis",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.js",
+    "dev": "nodemon src/main.js"
+  },
+  "keywords": [
+    "node",
+    "mysql",
+    "redis",
+    "docker"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "mysql2": "^3.15.1",
+    "redis": "^5.8.3",
+    "sequelize": "^6.37.7"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
