@@ -1,7 +1,10 @@
 import sequelize from '../config/database.js';
 import { Project } from './project.model.js';
+import { Task } from './task.model.js';
 
-// Project.hasMany(OtherModel, { foreignKey: 'projectId' });
+// Definir relacionamentos
+Project.hasMany(Task, { foreignKey: 'projectId', as: 'tasks' });
+Task.belongsTo(Project, { foreignKey: 'projectId', as: 'project' });
 
 export const syncDatabase = async (force = false) => {
     try {
@@ -28,6 +31,6 @@ export const closeDatabase = async () => {
     }
 };
 
-export { Project };
+export { Project, Task };
 
 export { sequelize };
