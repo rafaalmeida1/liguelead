@@ -1,5 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 import { i18nMiddleware } from "./middlewares/i18n.js";
 import { generalLimiter } from "./middlewares/rateLimiter.js";
 import { errorHandler, notFoundHandler } from "./middlewares/errorHandler.js";
@@ -10,10 +12,52 @@ dotenv.config();
 
 const app = express();
 
+// Configuração do Swagger
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'LigueLead API',
+      version: '1.0.0',
+      description: 'Sistema completo de gerenciamento de projetos e tarefas',
+      contact: {
+        name: 'Suporte',
+        email: 'rafaprof312@gmail.com'
+      }
+    },
+    servers: [
+      {
+        url: `http://localhost:${process.env.NODE_PORT}`,
+        description: 'Servidor de desenvolvimento'
+      }
+    ],
+    tags: [
+      {
+        name: 'Projetos',
+        description: 'Endpoints para gerenciamento de projetos'
+      },
+      {
+        name: 'Tarefas',
+        description: 'Endpoints para gerenciamento de tarefas'
+      }
+    ]
+  },
+  apis: ['./src/routes/*.js']
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(i18nMiddleware);
 app.use(generalLimiter);
+
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'LigueLead API Documentation'
+}));
+
 app.use(routes);
 
 app.use(notFoundHandler);

@@ -1,0 +1,230 @@
+---
+title: "Quickstart"
+description: "Comece a usar a API LigueLead em minutos"
+---
+
+## Execução Rápida com Docker
+
+A forma mais simples de executar a API LigueLead é usando Docker Compose, que já inclui todos os serviços necessários.
+
+### Pré-requisitos
+
+- Docker
+- Docker Compose
+
+### 1. Clone o repositório
+
+```bash
+git clone <url-do-repositorio>
+cd liguelead
+```
+
+### 2. Configure as variáveis de ambiente
+
+```bash
+# Copie o arquivo de exemplo
+cp .env-example .env
+
+# Edite o arquivo .env se necessário (opcional)
+nano .env
+```
+
+### 3. Execute o projeto
+
+```bash
+# Iniciar todos os serviços (aplicação + banco + cache)
+docker-compose up
+
+# Ou em background
+docker-compose up -d
+```
+
+### 4. Acesse a aplicação
+
+- **API**: http://localhost:3000
+- **Documentação**: http://localhost:3001 (Mintlify)
+- **MySQL**: localhost:3306
+- **Redis**: localhost:6379
+
+## Testando a API
+
+### Criar um projeto
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST http://localhost:3000/projects \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Meu Projeto",
+    "description": "Descrição do projeto"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('http://localhost:3000/projects', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    name: 'Meu Projeto',
+    description: 'Descrição do projeto'
+  })
+});
+
+const project = await response.json();
+console.log(project);
+```
+
+```python Python
+import requests
+
+response = requests.post('http://localhost:3000/projects', json={
+    'name': 'Meu Projeto',
+    'description': 'Descrição do projeto'
+})
+
+project = response.json()
+print(project)
+```
+
+</CodeGroup>
+
+### Listar projetos
+
+<CodeGroup>
+
+```bash cURL
+curl http://localhost:3000/projects
+```
+
+```javascript JavaScript
+const response = await fetch('http://localhost:3000/projects');
+const projects = await response.json();
+console.log(projects);
+```
+
+```python Python
+import requests
+
+response = requests.get('http://localhost:3000/projects')
+projects = response.json()
+print(projects)
+```
+
+</CodeGroup>
+
+### Criar uma tarefa
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST http://localhost:3000/projects/1/tasks \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Minha Tarefa",
+    "description": "Descrição da tarefa",
+    "priority": "high"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('http://localhost:3000/projects/1/tasks', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    title: 'Minha Tarefa',
+    description: 'Descrição da tarefa',
+    priority: 'high'
+  })
+});
+
+const task = await response.json();
+console.log(task);
+```
+
+```python Python
+import requests
+
+response = requests.post('http://localhost:3000/projects/1/tasks', json={
+    'title': 'Minha Tarefa',
+    'description': 'Descrição da tarefa',
+    'priority': 'high'
+})
+
+task = response.json()
+print(task)
+```
+
+</CodeGroup>
+
+## Comandos Úteis
+
+### Gerenciamento de Containers
+
+<CodeGroup>
+
+```bash Parar serviços
+docker-compose down
+```
+
+```bash Limpar dados
+docker-compose down -v
+```
+
+```bash Ver logs
+docker-compose logs -f app-dev
+```
+
+```bash Rebuild
+docker-compose up --build app-dev mysql redis
+```
+
+</CodeGroup>
+
+### Desenvolvimento
+
+<CodeGroup>
+
+```bash Instalar dependências
+docker-compose exec app-dev npm install
+```
+
+</CodeGroup>
+
+## Configuração Avançada
+
+### Variáveis de Ambiente (.env)
+
+```env
+# Servidor
+NODE_PORT=3000
+NODE_ENV=development
+
+# MySQL
+MYSQL_ROOT_PASSWORD=root
+DB_HOST=mysql
+DB_PORT=3306
+DB_NAME=liguelead
+DB_USER=liguelead_user
+DB_PASSWORD=liguelead_password
+
+# Redis
+REDIS_HOST=redis
+REDIS_PORT=6379
+REDIS_PASSWORD=redis_password
+```
+
+## Próximos Passos
+
+<CardGroup cols={2}>
+  <Card title="API Reference" icon="code" href="/api-reference">
+    Explore todos os endpoints disponíveis
+  </Card>
+  <Card title="Projetos" icon="folder" href="/api-reference/projects">
+    Gerenciar projetos
+  </Card>
+</CardGroup>

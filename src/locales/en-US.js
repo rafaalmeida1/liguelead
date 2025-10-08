@@ -1,6 +1,7 @@
 export default {
   tooManyRequests: 'Too many requests, try again in 15 minutes',
   projectLimitExceeded: 'Project creation limit exceeded, try again in 1 minute',
+  taskLimitExceeded: 'Task creation limit exceeded, try again in 1 minute',
   githubLimitExceeded: 'GitHub query limit exceeded, try again in 10 minutes',
   serverError: 'Internal server error',
   notFound: 'Resource not found',

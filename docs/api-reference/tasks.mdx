@@ -1,0 +1,354 @@
+---
+title: "Tarefas"
+api: "openapi.yaml"
+---
+
+## Visão Geral
+
+Os endpoints de tarefas permitem gerenciar tarefas associadas a projetos, incluindo criação, listagem, busca, atualização e exclusão.
+
+<Note>
+Todas as tarefas devem estar associadas a um projeto existente.
+</Note>
+
+## Endpoints Disponíveis
+
+<CardGroup cols={2}>
+  <Card title="POST /projects/:projectId/tasks" icon="plus">
+    Criar nova tarefa em um projeto
+  </Card>
+  <Card title="GET /tasks" icon="list">
+    Listar todas as tarefas
+  </Card>
+  <Card title="GET /tasks/:id" icon="magnifying-glass">
+    Buscar tarefa por ID
+  </Card>
+  <Card title="PUT /tasks/:id" icon="pen">
+    Atualizar tarefa
+  </Card>
+  <Card title="DELETE /tasks/:id" icon="trash">
+    Excluir tarefa
+  </Card>
+  <Card title="GET /projects/:projectId/tasks" icon="folder">
+    Listar tarefas de um projeto
+  </Card>
+</CardGroup>
+
+## Modelo de Dados
+
+### Task
+
+```javascript
+{
+  id: INTEGER (PK, Auto Increment),
+  title: STRING (NOT NULL),
+  description: TEXT,
+  status: ENUM('pending', 'in_progress', 'completed', 'cancelled') DEFAULT 'pending',
+  priority: ENUM('low', 'medium', 'high', 'urgent') DEFAULT 'medium',
+  dueDate: DATE,
+  projectId: INTEGER (FK to projects.id),
+  createdAt: DATE,
+  updatedAt: DATE
+}
+```
+
+### Campos Obrigatórios
+
+- **title**: Título da tarefa (string, obrigatório)
+- **projectId**: ID do projeto (integer, obrigatório)
+
+### Campos Opcionais
+
+- **description**: Descrição da tarefa (text)
+- **status**: Status da tarefa (enum: 'pending', 'in_progress', 'completed', 'cancelled', padrão: 'pending')
+- **priority**: Prioridade da tarefa (enum: 'low', 'medium', 'high', 'urgent', padrão: 'medium')
+- **dueDate**: Data de vencimento (date)
+
+## Exemplos de Uso
+
+### Criar Tarefa
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST http://localhost:3000/projects/1/tasks \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Implementar autenticação",
+    "description": "Desenvolver sistema de login e registro",
+    "priority": "high",
+    "dueDate": "2024-02-15"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('http://localhost:3000/projects/1/tasks', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    title: 'Implementar autenticação',
+    description: 'Desenvolver sistema de login e registro',
+    priority: 'high',
+    dueDate: '2024-02-15'
+  })
+});
+
+const task = await response.json();
+console.log(task);
+```
+
+```python Python
+import requests
+
+response = requests.post('http://localhost:3000/projects/1/tasks', json={
+    'title': 'Implementar autenticação',
+    'description': 'Desenvolver sistema de login e registro',
+    'priority': 'high',
+    'dueDate': '2024-02-15'
+})
+
+task = response.json()
+print(task)
+```
+
+</CodeGroup>
+
+### Listar Todas as Tarefas
+
+<CodeGroup>
+
+```bash cURL
+curl http://localhost:3000/tasks
+```
+
+```javascript JavaScript
+const response = await fetch('http://localhost:3000/tasks');
+const tasks = await response.json();
+console.log(tasks);
+```
+
+```python Python
+import requests
+
+response = requests.get('http://localhost:3000/tasks')
+tasks = response.json()
+print(tasks)
+```
+
+</CodeGroup>
+
+### Buscar Tarefa por ID
+
+<CodeGroup>
+
+```bash cURL
+curl http://localhost:3000/tasks/1
+```
+
+```javascript JavaScript
+const response = await fetch('http://localhost:3000/tasks/1');
+const task = await response.json();
+console.log(task);
+```
+
+```python Python
+import requests
+
+response = requests.get('http://localhost:3000/tasks/1')
+task = response.json()
+print(task)
+```
+
+</CodeGroup>
+
+### Listar Tarefas de um Projeto
+
+<CodeGroup>
+
+```bash cURL
+curl http://localhost:3000/projects/1/tasks
+```
+
+```javascript JavaScript
+const response = await fetch('http://localhost:3000/projects/1/tasks');
+const tasks = await response.json();
+console.log(tasks);
+```
+
+```python Python
+import requests
+
+response = requests.get('http://localhost:3000/projects/1/tasks')
+tasks = response.json()
+print(tasks)
+```
+
+</CodeGroup>
+
+### Atualizar Tarefa
+
+<CodeGroup>
+
+```bash cURL
+curl -X PUT http://localhost:3000/tasks/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Implementar autenticação JWT",
+    "description": "Desenvolver sistema de login com JWT",
+    "status": "in_progress",
+    "priority": "urgent"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('http://localhost:3000/tasks/1', {
+  method: 'PUT',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    title: 'Implementar autenticação JWT',
+    description: 'Desenvolver sistema de login com JWT',
+    status: 'in_progress',
+    priority: 'urgent'
+  })
+});
+
+const task = await response.json();
+console.log(task);
+```
+
+```python Python
+import requests
+
+response = requests.put('http://localhost:3000/tasks/1', json={
+    'title': 'Implementar autenticação JWT',
+    'description': 'Desenvolver sistema de login com JWT',
+    'status': 'in_progress',
+    'priority': 'urgent'
+})
+
+task = response.json()
+print(task)
+```
+
+</CodeGroup>
+
+### Excluir Tarefa
+
+<CodeGroup>
+
+```bash cURL
+curl -X DELETE http://localhost:3000/tasks/1
+```
+
+```javascript JavaScript
+const response = await fetch('http://localhost:3000/tasks/1', {
+  method: 'DELETE'
+});
+
+if (response.ok) {
+  console.log('Tarefa excluída com sucesso');
+}
+```
+
+```python Python
+import requests
+
+response = requests.delete('http://localhost:3000/tasks/1')
+if response.status_code == 200:
+    print('Tarefa excluída com sucesso')
+```
+
+</CodeGroup>
+
+## Status e Prioridades
+
+### Status da Tarefa
+
+<CardGroup cols={2}>
+  <Card title="pending" icon="clock">
+    Tarefa pendente (padrão)
+  </Card>
+  <Card title="in_progress" icon="play">
+    Tarefa em andamento
+  </Card>
+  <Card title="completed" icon="check">
+    Tarefa concluída
+  </Card>
+  <Card title="cancelled" icon="x">
+    Tarefa cancelada
+  </Card>
+</CardGroup>
+
+### Prioridades
+
+<CardGroup cols={2}>
+  <Card title="low" icon="arrow-down">
+    Prioridade baixa
+  </Card>
+  <Card title="medium" icon="minus">
+    Prioridade média (padrão)
+  </Card>
+  <Card title="high" icon="arrow-up">
+    Prioridade alta
+  </Card>
+  <Card title="urgent" icon="exclamation">
+    Prioridade urgente
+  </Card>
+</CardGroup>
+
+## Códigos de Resposta
+
+<CardGroup cols={2}>
+  <Card title="200 OK" icon="check">
+    Requisição processada com sucesso
+  </Card>
+  <Card title="201 Created" icon="plus">
+    Tarefa criada com sucesso
+  </Card>
+  <Card title="400 Bad Request" icon="exclamation-triangle">
+    Dados inválidos na requisição
+  </Card>
+  <Card title="404 Not Found" icon="magnifying-glass">
+    Tarefa ou projeto não encontrado
+  </Card>
+  <Card title="500 Internal Server Error" icon="server">
+    Erro interno do servidor
+  </Card>
+</CardGroup>
+
+## Validações
+
+### Campos Obrigatórios
+
+- **title**: Deve ser uma string não vazia
+- **projectId**: Deve ser um ID de projeto existente
+
+### Validações Específicas
+
+- **status**: Deve ser 'pending', 'in_progress', 'completed' ou 'cancelled'
+- **priority**: Deve ser 'low', 'medium', 'high' ou 'urgent'
+- **dueDate**: Deve ser uma data válida no formato ISO 8601
+- **title**: Máximo de 255 caracteres
+- **description**: Máximo de 2000 caracteres
+
+## Relacionamentos
+
+<Note>
+Todas as tarefas devem estar associadas a um projeto existente. Ao excluir um projeto, todas as suas tarefas também são excluídas.
+</Note>
+
+## Cache
+
+<Note>
+Todos os endpoints de tarefas utilizam cache Redis com TTL de 10 minutos. O cache é invalidado automaticamente quando dados são modificados.
+</Note>
+
+## Rate Limiting
+
+<Warning>
+A API possui rate limiting configurado. Consulte os headers de resposta para informações sobre limites.
+</Warning>

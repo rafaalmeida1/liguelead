@@ -6,6 +6,10 @@ export class ProjectRepository extends BaseRepository {
         super(Project);
     }
 
+    async findById(id) {
+        return await this.model.findByPk(id);
+    }
+
     async findByIdWithTasks(id) {
         return await this.model.findByPk(id, {
             include: [{
@@ -22,8 +26,10 @@ export class ProjectRepository extends BaseRepository {
             include: [{
                 model: Task,
                 as: 'tasks',
-                required: false
+                required: false,
+                attributes: ['id', 'title', 'status', 'priority', 'dueDate', 'createdAt', 'updatedAt']
             }],
+            distinct: true,
             ...options
         });
     }

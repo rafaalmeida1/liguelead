@@ -21,6 +21,9 @@ class TaskService {
             
             return task;
         } catch (error) {
+            if (error.message === 'Projeto não encontrado') {
+                throw error;
+            }
             throw new Error(`Erro ao criar tarefa: ${error.message}`);
         }
     }
@@ -44,6 +47,9 @@ class TaskService {
 
             return task;
         } catch (error) {
+            if (error.message === 'Tarefa não encontrada') {
+                throw error;
+            }
             throw new Error(`Erro ao buscar tarefa: ${error.message}`);
         }
     }
@@ -73,6 +79,9 @@ class TaskService {
 
             return updatedTask;
         } catch (error) {
+            if (error.message === 'Tarefa não encontrada' || error.message === 'Projeto de destino não encontrado') {
+                throw error;
+            }
             throw new Error(`Erro ao atualizar tarefa: ${error.message}`);
         }
     }
@@ -92,6 +101,9 @@ class TaskService {
 
             return true;
         } catch (error) {
+            if (error.message === 'Tarefa não encontrada') {
+                throw error;
+            }
             throw new Error(`Erro ao excluir tarefa: ${error.message}`);
         }
     }
@@ -116,6 +128,9 @@ class TaskService {
 
             return tasks;
         } catch (error) {
+            if (error.message === 'Projeto não encontrado') {
+                throw error;
+            }
             throw new Error(`Erro ao buscar tarefas do projeto: ${error.message}`);
         }
     }

@@ -1,6 +1,19 @@
 import { translations } from '../locales/index.js';
 
 const detectLanguage = (req) => {
+  if (req.query.lang) {
+    const lang = req.query.lang.toLowerCase();
+    const supportedLangs = {
+      'pt': 'pt-BR',
+      'pt-br': 'pt-BR',
+      'en': 'en-US',
+      'en-us': 'en-US',
+      'es': 'es-ES',
+      'es-es': 'es-ES'
+    };
+    return supportedLangs[lang] || 'pt-BR';
+  }
+  
   const acceptLanguage = req.headers['accept-language'];
   
   if (!acceptLanguage) return 'pt-BR';

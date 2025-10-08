@@ -91,8 +91,8 @@ class ProjectController {
             });
             
             const bodySchema = z.object({
-                name: z.string().min(1, 'Nome é obrigatório').max(255, 'Nome deve ter no máximo 255 caracteres'),
-                description: z.string().min(1, 'Descrição é obrigatória').max(1000, 'Descrição deve ter no máximo 1000 caracteres'),
+                name: z.string().min(1, 'Nome é obrigatório').max(255, 'Nome deve ter no máximo 255 caracteres').optional(),
+                description: z.string().min(1, 'Descrição é obrigatória').max(1000, 'Descrição deve ter no máximo 1000 caracteres').optional(),
                 status: z.enum(['active', 'inactive']).optional()
             });
             

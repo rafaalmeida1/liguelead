@@ -10,7 +10,7 @@ class RedisClient {
         try {
             const redisUrl = process.env.REDIS_URL || `redis://${process.env.REDIS_HOST || 'localhost'}:${process.env.REDIS_PORT || 6379}`;
             
-            this.client = createClient({
+            const clientConfig = {
                 url: redisUrl,
                 retry_strategy: (options) => {
                     if (options.error && options.error.code === 'ECONNREFUSED') {
@@ -27,7 +27,13 @@ class RedisClient {
                     }
                     return Math.min(options.attempt * 100, 3000);
                 }
-            });
+            };
+
+            if (process.env.REDIS_PASSWORD) {
+                clientConfig.password = process.env.REDIS_PASSWORD;
+            }
+            
+            this.client = createClient(clientConfig);
 
             this.client.on('error', (err) => {
                 console.error('Redis Client Error:', err);
@@ -111,7 +117,9 @@ class RedisClient {
         try {
             const keys = await this.client.keys(pattern);
             if (keys.length > 0) {
-                await this.client.del(keys);
+                for (const key of keys) {
+                    await this.client.del(key);
+                }
             }
             return true;
         } catch (error) {

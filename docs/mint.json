@@ -1,0 +1,46 @@
+{
+  "name": "LigueLead API",
+  "favicon": "/favicon.ico",
+  "colors": {
+    "primary": "#3B82F6",
+    "light": "#60A5FA",
+    "dark": "#1E40AF"
+  },
+  "topbarLinks": [
+    {
+      "name": "Suporte",
+      "url": "mailto:rafaprof312@gmail.com"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Testar API",
+    "url": "http://localhost:3000/api-docs"
+  },
+  "anchors": [
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "url": "https://github.com/rafaalmeida1"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Começar",
+      "pages": [
+        "introduction",
+        "quickstart"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference/projects",
+        "api-reference/tasks"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/rafaalmeida1"
+  },
+  "openapi": "./openapi.yaml"
+}

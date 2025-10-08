@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "start": "node src/main.js",
-    "dev": "nodemon src/main.js"
+    "dev": "nodemon src/main.js",
+    "docs:generate": "node scripts/generate-openapi.js",
+    "docs:dev": "mintlify dev",
+    "docs:build": "mintlify build"
   },
   "keywords": [
     "node",
@@ -24,12 +27,16 @@
     "mysql2": "^3.15.1",
     "redis": "^5.8.3",
     "sequelize": "^6.37.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0",
     "zod": "^4.1.11"
   },
   "engines": {
     "node": ">=22.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "mintlify": "^3.0.0"
   }
 }

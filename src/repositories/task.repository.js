@@ -6,6 +6,10 @@ export class TaskRepository extends BaseRepository {
         super(Task);
     }
 
+    async findById(id) {
+        return await this.model.findByPk(id);
+    }
+
     async findByIdWithProject(id) {
         return await this.model.findByPk(id, {
             include: [{

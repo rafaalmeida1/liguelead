@@ -12,7 +12,7 @@ export const generalLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-export const createProjectLimiter = rateLimit({
+export const projectLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minuto
   max: 5,
   message: (req) => ({
@@ -22,12 +22,12 @@ export const createProjectLimiter = rateLimit({
   })
 });
 
-export const githubLimiter = rateLimit({
-  windowMs: 10 * 60 * 1000, // 10 minutos
-  max: 20,
+export const taskLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minuto
+  max: 5,
   message: (req) => ({
     success: false,
-    message: req.t('githubLimitExceeded'),
+    message: req.t('taskLimitExceeded'),
     language: req.language
   })
 });

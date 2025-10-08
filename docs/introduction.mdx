@@ -1,0 +1,95 @@
+---
+title: "Introdução à API LigueLead"
+description: "Sistema completo de gerenciamento de projetos e tarefas com cache Redis profissional"
+---
+
+
+## O que é a API LigueLead?
+
+A **API LigueLead** é um sistema completo de gerenciamento de projetos e tarefas desenvolvido com tecnologias modernas. Oferece uma interface RESTful robusta para gerenciar projetos, tarefas e relacionamentos entre eles.
+
+## Características Principais
+
+<CardGroup cols={2}>
+  <Card title="Cache Inteligente" icon="bolt">
+    Sistema de cache Redis com TTL de 10 minutos e invalidação automática
+  </Card>
+  <Card title="Validação Rigorosa" icon="shield-check">
+    Validação completa de dados com Zod para garantir integridade
+  </Card>
+  <Card title="Rate Limiting" icon="gauge">
+    Controle de taxa de requisições para proteger a API
+  </Card>
+  <Card title="Docker Ready" icon="docker">
+    Execução completa em containers Docker para fácil deploy
+  </Card>
+</CardGroup>
+
+## Tecnologias Utilizadas
+
+- **Node.js** (>=22.0.0) - Runtime JavaScript
+- **Express.js** - Framework web minimalista
+- **MySQL** - Banco de dados relacional
+- **Sequelize** - ORM para JavaScript
+- **Redis** - Cache em memória
+- **Zod** - Validação de esquemas
+- **Docker** - Containerização
+
+## Arquitetura
+
+O sistema segue uma arquitetura em camadas bem definida:
+
+<Steps>
+  <Step title="Controllers">
+    Validação de entrada e controle de fluxo das requisições
+  </Step>
+  <Step title="Services">
+    Lógica de negócio e gerenciamento de cache
+  </Step>
+  <Step title="Repositories">
+    Acesso aos dados através do Sequelize ORM
+  </Step>
+  <Step title="Models">
+    Definição das entidades e relacionamentos
+  </Step>
+</Steps>
+
+## Modelos de Dados
+
+### Project
+```javascript
+{
+  id: INTEGER (PK, Auto Increment),
+  name: STRING (NOT NULL),
+  description: STRING (NOT NULL),
+  status: ENUM('active', 'inactive') DEFAULT 'active',
+  createdAt: DATE,
+  updatedAt: DATE
+}
+```
+
+### Task
+```javascript
+{
+  id: INTEGER (PK, Auto Increment),
+  title: STRING (NOT NULL),
+  description: TEXT,
+  status: ENUM('pending', 'in_progress', 'completed', 'cancelled') DEFAULT 'pending',
+  priority: ENUM('low', 'medium', 'high', 'urgent') DEFAULT 'medium',
+  dueDate: DATE,
+  projectId: INTEGER (FK to projects.id),
+  createdAt: DATE,
+  updatedAt: DATE
+}
+```
+
+## Próximos Passos
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Comece a usar a API em minutos
+  </Card>
+  <Card title="API Reference" icon="code" href="/api-reference">
+    Explore todos os endpoints disponíveis
+  </Card>
+</CardGroup>

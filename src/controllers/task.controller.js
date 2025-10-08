@@ -10,17 +10,21 @@ class TaskController {
                 description: z.string().max(1000, 'Descrição deve ter no máximo 1000 caracteres').optional(),
                 status: z.enum(['pending', 'in_progress', 'completed', 'cancelled']).optional(),
                 priority: z.enum(['low', 'medium', 'high', 'urgent']).optional(),
-                dueDate: z.string().datetime().optional().transform(val => val ? new Date(val) : undefined),
-                projectId: z.number().int().positive('ID do projeto deve ser um número positivo')
+                dueDate: z.string().optional().transform(val => {
+                    if (!val) return undefined;
+                    const date = new Date(val);
+                    return isNaN(date.getTime()) ? undefined : date;
+                })
             });
             
             const validatedData = schema.parse(req.body);
-            const task = await taskService.createTask(validatedData);
+            const projectId = parseInt(req.params.projectId);
+            const task = await taskService.createTask({ ...validatedData, projectId });
             
             res.status(201).json(createResponse(req, task, 'taskCreated'));
         } catch (error) {
             if (error instanceof z.ZodError) {
-                const errorMessages = error.errors.map(err => ({
+                const errorMessages = error.errors?.map(err => ({
                     field: err.path.join('.'),
                     message: err.message
                 }));
@@ -48,7 +52,7 @@ class TaskController {
             res.status(200).json(createResponse(req, task, 'task'));
         } catch (error) {
             if (error instanceof z.ZodError) {
-                const errorMessages = error.errors.map(err => ({
+                const errorMessages = error.errors?.map(err => ({
                     field: err.path.join('.'),
                     message: err.message
                 }));
@@ -75,7 +79,11 @@ class TaskController {
                 description: z.string().max(1000, 'Descrição deve ter no máximo 1000 caracteres').optional(),
                 status: z.enum(['pending', 'in_progress', 'completed', 'cancelled']).optional(),
                 priority: z.enum(['low', 'medium', 'high', 'urgent']).optional(),
-                dueDate: z.string().datetime().optional().transform(val => val ? new Date(val) : undefined),
+                dueDate: z.string().optional().transform(val => {
+                    if (!val) return undefined;
+                    const date = new Date(val);
+                    return isNaN(date.getTime()) ? undefined : date;
+                }),
                 projectId: z.number().int().positive('ID do projeto deve ser um número positivo').optional()
             });
             
@@ -87,7 +95,7 @@ class TaskController {
             res.status(200).json(createResponse(req, task, 'task'));
         } catch (error) {
             if (error instanceof z.ZodError) {
-                const errorMessages = error.errors.map(err => ({
+                const errorMessages = error.errors?.map(err => ({
                     field: err.path.join('.'),
                     message: err.message
                 }));
@@ -119,7 +127,7 @@ class TaskController {
             res.status(200).json(createResponse(req, null, 'taskDeleted'));
         } catch (error) {
             if (error instanceof z.ZodError) {
-                const errorMessages = error.errors.map(err => ({
+                const errorMessages = error.errors?.map(err => ({
                     field: err.path.join('.'),
                     message: err.message
                 }));
@@ -147,7 +155,7 @@ class TaskController {
             res.status(200).json(createResponse(req, tasks, 'tasks'));
         } catch (error) {
             if (error instanceof z.ZodError) {
-                const errorMessages = error.errors.map(err => ({
+                const errorMessages = error.errors?.map(err => ({
                     field: err.path.join('.'),
                     message: err.message
                 }));
@@ -179,7 +187,7 @@ class TaskController {
             res.status(200).json(createResponse(req, result, 'tasks'));
         } catch (error) {
             if (error instanceof z.ZodError) {
-                const errorMessages = error.errors.map(err => ({
+                const errorMessages = error.errors?.map(err => ({
                     field: err.path.join('.'),
                     message: err.message
                 }));

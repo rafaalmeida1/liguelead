@@ -25,15 +25,17 @@ nano .env
 
 ### 3. Execute o projeto
 ```bash
-# Iniciar todos os serviços (aplicação + banco + cache)
-docker-compose up app-dev mysql redis
+# Iniciar todos os serviços (aplicação + banco + cache + documentação)
+docker-compose up app-dev mysql redis docs
 
 # Ou em background
-docker-compose up -d app-dev mysql redis
+docker-compose up -d app-dev mysql redis docs
 ```
 
 ### 4. Acesse a aplicação
 - **API**: http://localhost:3000
+- **Swagger UI**: http://localhost:3000/api-docs (Teste interativo da API)
+- **Documentação**: http://localhost:3001 (Mintlify)
 - **MySQL**: localhost:3306
 - **Redis**: localhost:6379
 
@@ -83,6 +85,60 @@ GET    /tasks/:id             # Buscar tarefa
 PUT    /tasks/:id             # Atualizar tarefa
 DELETE /tasks/:id             # Excluir tarefa
 GET    /projects/:id/tasks    # Tarefas do projeto
+```
+
+## 📚 Documentação e Testes
+
+O projeto inclui **duas formas** de documentação e teste da API:
+
+### 🔧 Swagger UI (Teste Direto da API)
+- **URL**: http://localhost:3000/api-docs
+- **Funcionalidade**: Teste interativo direto da API
+- **Vantagem**: Testa a API real em tempo real
+- **Uso**: Ideal para desenvolvedores testarem endpoints
+
+### 📖 Mintlify (Documentação Completa)
+- **URL**: http://localhost:3001
+- **Funcionalidade**: Documentação completa e interativa
+- **Vantagem**: Interface moderna com exemplos em múltiplas linguagens
+- **Uso**: Ideal para documentação e onboarding
+
+### Acessar Documentação
+
+```bash
+# Iniciar apenas a documentação
+docker-compose up docs
+
+# Ou iniciar tudo junto
+docker-compose up app-dev mysql redis docs
+```
+
+Acesse: **http://localhost:3001**
+
+### Comandos de Documentação
+
+```bash
+# Gerar arquivo OpenAPI a partir das rotas
+npm run docs:generate
+
+# Executar documentação em modo desenvolvimento
+npm run docs:dev
+
+# Build da documentação para produção
+npm run docs:build
+```
+
+### Estrutura da Documentação
+
+```
+docs/
+├── mint.json              # Configuração do Mintlify
+├── openapi.yaml           # Especificação OpenAPI (gerada automaticamente)
+├── introduction.mdx       # Página de introdução
+├── quickstart.mdx         # Guia de início rápido
+└── api-reference/         # Referência da API
+    ├── projects.mdx       # Documentação de projetos
+    └── tasks.mdx          # Documentação de tarefas
 ```
 
 ## 🧪 Testando a API
@@ -137,6 +193,7 @@ REDIS_PASSWORD=redis_password
 
 ### Serviços Disponíveis
 - **app-dev**: Aplicação Node.js em modo desenvolvimento
+- **docs**: Documentação interativa com Mintlify
 - **mysql**: Banco de dados MySQL 8.0
 - **redis**: Cache Redis 7
 

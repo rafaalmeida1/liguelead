@@ -36,10 +36,13 @@ class ProjectService {
                 throw new Error('Projeto não encontrado');
             }
 
-            await redisClient.set(cacheKey, project, 600); // 600 = 10 minutos
+            await redisClient.set(cacheKey, project, 600);
 
             return project;
         } catch (error) {
+            if (error.message === 'Projeto não encontrado') {
+                throw error;
+            }
             throw new Error(`Erro ao buscar projeto: ${error.message}`);
         }
     }
@@ -112,6 +115,9 @@ class ProjectService {
 
             return project;
         } catch (error) {
+            if (error.message === 'Registro não encontrado') {
+                throw new Error('Projeto não encontrado');
+            }
             throw new Error(`Erro ao atualizar projeto: ${error.message}`);
         }
     }
@@ -130,6 +136,12 @@ class ProjectService {
 
             return true;
         } catch (error) {
+            if (error.message === 'Registro não encontrado') {
+                throw new Error('Projeto não encontrado');
+            }
+            if (error.message.includes('tarefas vinculadas')) {
+                throw error;
+            }
             throw new Error(`Erro ao excluir projeto: ${error.message}`);
         }
     }
@@ -154,6 +166,9 @@ class ProjectService {
 
             return tasks;
         } catch (error) {
+            if (error.message === 'Projeto não encontrado') {
+                throw error;
+            }
             throw new Error(`Erro ao buscar tarefas do projeto: ${error.message}`);
         }
     }

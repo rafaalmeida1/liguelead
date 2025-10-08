@@ -1,0 +1,268 @@
+---
+title: "Projetos"
+api: "openapi.yaml"
+---
+
+## Visão Geral
+
+Os endpoints de projetos permitem criar, listar, buscar, atualizar e excluir projetos no sistema LigueLead.
+
+<Note>
+Todos os endpoints retornam dados em formato JSON e seguem os padrões REST.
+</Note>
+
+## Endpoints Disponíveis
+
+<CardGroup cols={2}>
+  <Card title="POST /projects" icon="plus">
+    Criar um novo projeto
+  </Card>
+  <Card title="GET /projects" icon="list">
+    Listar todos os projetos
+  </Card>
+  <Card title="GET /projects/:id" icon="magnifying-glass">
+    Buscar projeto por ID
+  </Card>
+  <Card title="PUT /projects/:id" icon="pen">
+    Atualizar projeto
+  </Card>
+  <Card title="DELETE /projects/:id" icon="trash">
+    Excluir projeto
+  </Card>
+</CardGroup>
+
+## Modelo de Dados
+
+### Project
+
+```javascript
+{
+  id: INTEGER (PK, Auto Increment),
+  name: STRING (NOT NULL),
+  description: STRING (NOT NULL),
+  status: ENUM('active', 'inactive') DEFAULT 'active',
+  createdAt: DATE,
+  updatedAt: DATE
+}
+```
+
+### Campos Obrigatórios
+
+- **name**: Nome do projeto (string, obrigatório)
+- **description**: Descrição do projeto (string, obrigatório)
+
+### Campos Opcionais
+
+- **status**: Status do projeto (enum: 'active' ou 'inactive', padrão: 'active')
+
+## Exemplos de Uso
+
+### Criar Projeto
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST http://localhost:3000/projects \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Sistema de Vendas",
+    "description": "Desenvolvimento de sistema completo de vendas online"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('http://localhost:3000/projects', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    name: 'Sistema de Vendas',
+    description: 'Desenvolvimento de sistema completo de vendas online'
+  })
+});
+
+const project = await response.json();
+console.log(project);
+```
+
+```python Python
+import requests
+
+response = requests.post('http://localhost:3000/projects', json={
+    'name': 'Sistema de Vendas',
+    'description': 'Desenvolvimento de sistema completo de vendas online'
+})
+
+project = response.json()
+print(project)
+```
+
+</CodeGroup>
+
+### Listar Projetos
+
+<CodeGroup>
+
+```bash cURL
+curl http://localhost:3000/projects
+```
+
+```javascript JavaScript
+const response = await fetch('http://localhost:3000/projects');
+const projects = await response.json();
+console.log(projects);
+```
+
+```python Python
+import requests
+
+response = requests.get('http://localhost:3000/projects')
+projects = response.json()
+print(projects)
+```
+
+</CodeGroup>
+
+### Buscar Projeto por ID
+
+<CodeGroup>
+
+```bash cURL
+curl http://localhost:3000/projects/1
+```
+
+```javascript JavaScript
+const response = await fetch('http://localhost:3000/projects/1');
+const project = await response.json();
+console.log(project);
+```
+
+```python Python
+import requests
+
+response = requests.get('http://localhost:3000/projects/1')
+project = response.json()
+print(project)
+```
+
+</CodeGroup>
+
+### Atualizar Projeto
+
+<CodeGroup>
+
+```bash cURL
+curl -X PUT http://localhost:3000/projects/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Sistema de Vendas Atualizado",
+    "description": "Descrição atualizada do projeto",
+    "status": "inactive"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('http://localhost:3000/projects/1', {
+  method: 'PUT',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    name: 'Sistema de Vendas Atualizado',
+    description: 'Descrição atualizada do projeto',
+    status: 'inactive'
+  })
+});
+
+const project = await response.json();
+console.log(project);
+```
+
+```python Python
+import requests
+
+response = requests.put('http://localhost:3000/projects/1', json={
+    'name': 'Sistema de Vendas Atualizado',
+    'description': 'Descrição atualizada do projeto',
+    'status': 'inactive'
+})
+
+project = response.json()
+print(project)
+```
+
+</CodeGroup>
+
+### Excluir Projeto
+
+<CodeGroup>
+
+```bash cURL
+curl -X DELETE http://localhost:3000/projects/1
+```
+
+```javascript JavaScript
+const response = await fetch('http://localhost:3000/projects/1', {
+  method: 'DELETE'
+});
+
+if (response.ok) {
+  console.log('Projeto excluído com sucesso');
+}
+```
+
+```python Python
+import requests
+
+response = requests.delete('http://localhost:3000/projects/1')
+if response.status_code == 200:
+    print('Projeto excluído com sucesso')
+```
+
+</CodeGroup>
+
+## Códigos de Resposta
+
+<CardGroup cols={2}>
+  <Card title="200 OK" icon="check">
+    Requisição processada com sucesso
+  </Card>
+  <Card title="201 Created" icon="plus">
+    Recurso criado com sucesso
+  </Card>
+  <Card title="400 Bad Request" icon="exclamation-triangle">
+    Dados inválidos na requisição
+  </Card>
+  <Card title="404 Not Found" icon="magnifying-glass">
+    Projeto não encontrado
+  </Card>
+  <Card title="500 Internal Server Error" icon="server">
+    Erro interno do servidor
+  </Card>
+</CardGroup>
+
+## Validações
+
+### Campos Obrigatórios
+
+- **name**: Deve ser uma string não vazia
+- **description**: Deve ser uma string não vazia
+
+### Validações Específicas
+
+- **status**: Deve ser 'active' ou 'inactive'
+- **name**: Máximo de 255 caracteres
+- **description**: Máximo de 1000 caracteres
+
+## Cache
+
+<Note>
+Todos os endpoints de projetos utilizam cache Redis com TTL de 10 minutos. O cache é invalidado automaticamente quando dados são modificados.
+</Note>
+
+## Rate Limiting
+
+<Warning>
+A API possui rate limiting configurado. Consulte os headers de resposta para informações sobre limites.
+</Warning>

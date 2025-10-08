@@ -32,19 +32,27 @@ export class BaseRepository {
     }
 
     async update(id, data) {
-        const record = await this.model.findByPk(id);
-        if (!record) {
+        const [affectedRows] = await this.model.update(data, {
+            where: { id }
+        });
+        
+        if (affectedRows === 0) {
             throw new Error('Registro não encontrado');
         }
-        return await record.update(data);
+        
+        return await this.model.findByPk(id);
     }
 
     async delete(id) {
-        const record = await this.model.findByPk(id);
-        if (!record) {
+        const deletedRows = await this.model.destroy({
+            where: { id }
+        });
+        
+        if (deletedRows === 0) {
             throw new Error('Registro não encontrado');
         }
-        return await record.destroy();
+        
+        return true;
     }
 
     async count(where = {}) {
