@@ -279,6 +279,73 @@
               "default": "pt"
             },
             "description": "Idioma da resposta (pt=Português, en=English, es=Español)"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Número da página (começa em 1)"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "description": "Número de itens por página (máximo 100)"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filtrar por nome do projeto"
+          },
+          {
+            "in": "query",
+            "name": "description",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filtrar por descrição do projeto"
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "inactive"
+              ]
+            },
+            "description": "Filtrar por status do projeto"
+          },
+          {
+            "in": "query",
+            "name": "initialDate",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Data inicial para filtro (formato YYYY-MM-DD)"
+          },
+          {
+            "in": "query",
+            "name": "finalDate",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Data final para filtro (formato YYYY-MM-DD)"
           }
         ],
         "responses": {
@@ -287,34 +354,83 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "name": {
-                        "type": "string",
-                        "example": "Sistema de Vendas"
-                      },
-                      "description": {
-                        "type": "string",
-                        "example": "Desenvolvimento de sistema completo de vendas online"
-                      },
-                      "status": {
-                        "type": "string",
-                        "example": "active"
-                      },
-                      "createdAt": {
-                        "type": "string",
-                        "format": "date-time"
-                      },
-                      "updatedAt": {
-                        "type": "string",
-                        "format": "date-time"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Projetos listados com sucesso"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "projects": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Sistema de Vendas"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "Desenvolvimento de sistema completo de vendas online"
+                              },
+                              "status": {
+                                "type": "string",
+                                "example": "active"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "tasks": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "page": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "limit": {
+                              "type": "integer",
+                              "example": 10
+                            },
+                            "total": {
+                              "type": "integer",
+                              "example": 25
+                            },
+                            "totalPages": {
+                              "type": "integer",
+                              "example": 3
+                            }
+                          }
+                        }
                       }
+                    },
+                    "language": {
+                      "type": "string",
+                      "example": "pt-BR"
                     }
                   }
                 }
@@ -649,7 +765,7 @@
                     "type": "string",
                     "format": "date",
                     "description": "Data de vencimento",
-                    "example": "2024-02-15"
+                    "example": "2025-10-07"
                   }
                 }
               }
@@ -830,6 +946,63 @@
               "default": "pt"
             },
             "description": "Idioma da resposta (pt=Português, en=English, es=Español)"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Número da página (começa em 1)"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "description": "Número de itens por página (máximo 100)"
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "in_progress",
+                "completed",
+                "cancelled"
+              ]
+            },
+            "description": "Filtrar por status da tarefa"
+          },
+          {
+            "in": "query",
+            "name": "priority",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high",
+                "urgent"
+              ]
+            },
+            "description": "Filtrar por prioridade da tarefa"
+          },
+          {
+            "in": "query",
+            "name": "projectId",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filtrar por ID do projeto"
           }
         ],
         "responses": {
@@ -838,47 +1011,104 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "title": {
-                        "type": "string",
-                        "example": "Implementar autenticação"
-                      },
-                      "description": {
-                        "type": "string",
-                        "example": "Desenvolver sistema de login e registro"
-                      },
-                      "status": {
-                        "type": "string",
-                        "example": "pending"
-                      },
-                      "priority": {
-                        "type": "string",
-                        "example": "high"
-                      },
-                      "dueDate": {
-                        "type": "string",
-                        "format": "date",
-                        "example": "2024-02-15"
-                      },
-                      "projectId": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "createdAt": {
-                        "type": "string",
-                        "format": "date-time"
-                      },
-                      "updatedAt": {
-                        "type": "string",
-                        "format": "date-time"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Tarefas listadas com sucesso"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "tasks": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "title": {
+                                "type": "string",
+                                "example": "Implementar autenticação"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "Desenvolver sistema de login e registro"
+                              },
+                              "status": {
+                                "type": "string",
+                                "example": "pending"
+                              },
+                              "priority": {
+                                "type": "string",
+                                "example": "high"
+                              },
+                              "dueDate": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-10-07T00:00:00.000Z"
+                              },
+                              "projectId": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "project": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "integer"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "status": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "page": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "limit": {
+                              "type": "integer",
+                              "example": 10
+                            },
+                            "total": {
+                              "type": "integer",
+                              "example": 25
+                            },
+                            "totalPages": {
+                              "type": "integer",
+                              "example": 3
+                            }
+                          }
+                        }
                       }
+                    },
+                    "language": {
+                      "type": "string",
+                      "example": "pt-BR"
                     }
                   }
                 }
@@ -1055,7 +1285,7 @@
                     "type": "string",
                     "format": "date",
                     "description": "Data de vencimento",
-                    "example": "2024-02-20"
+                    "example": "2025-10-07"
                   }
                 }
               }
